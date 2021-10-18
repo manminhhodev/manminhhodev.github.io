@@ -13,17 +13,23 @@
 
     <link rel="shortcut icon" href="images/gt_favicon.png">
 
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/b3dfd258f7.js" crossorigin="anonymous"></script>
+    <script src="js/spotlight.bundle.js"></script>
+    <script src="js/dynamics.min.js"></script>
+    <script src="js/flex-gallery.js"></script>
+    
+
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
     <link href="css/clean-blog.min.css" rel="stylesheet">
-    <link href="css/others.css" rel="stylesheet">
+    <link href="css/flex-gallery.css" rel="stylesheet" >
 
     <!-- Custom Fonts -->
-    <script src="https://kit.fontawesome.com/b3dfd258f7.js" crossorigin="anonymous"></script>
-    <script src="css/spotlight.bundle.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons/css/academicons.min.css">
+    <link href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons/css/academicons.min.css" rel="stylesheet" >
     <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 
@@ -358,91 +364,53 @@
             I have served as a reviewer for CVPRW 2020, BMVC 2020, WACV 2021, BMVC 2021, ICCV 2021 (assistant), and WACV 2022.
             <hr>
             <h1 id="ga">Gallery</h1>
-            2019/12: My first conference trip to CVMP 2019, London, UK.
             <br>
-            <div class="row">
-                <div class="column">
-                    <img onclick="showGallery(1)" src="https://live.staticflickr.com/65535/51597809452_1f09072568_m.jpg">
-                    <img onclick="showGallery(2)" src="https://live.staticflickr.com/65535/51599530360_d402c81998_m.jpg">
-                </div>
-                <div class="column">
-                    <img onclick="showGallery(3)" src="https://live.staticflickr.com/65535/51598853558_ccc0e52bdc_m.jpg">
-                    <img onclick="showGallery(4)" src="https://live.staticflickr.com/65535/51598637096_b59af2247c_n.jpg">
-                </div>
-                <div class="column">
-                    <img onclick="showGallery(5)" src="https://live.staticflickr.com/65535/51599294004_701ebc4569_n.jpg">
-                    <img onclick="showGallery(6)" src="https://live.staticflickr.com/65535/51599293424_0c63f6d360_m.jpg">
-                </div>
-                <div class="column">
-                    <img onclick="showGallery(7)" src="https://live.staticflickr.com/65535/51598852128_1a9789c751_m.jpg">
-                    <img onclick="showGallery(8)" src="https://live.staticflickr.com/65535/51599530735_be7434d177_m.jpg">
-                </div>
-                <div class="column">
-                    <img onclick="showGallery(9)" src="https://live.staticflickr.com/65535/51599291849_fed6c6e1da_m.jpg ">
-                    <img onclick="showGallery(10)" src="https://live.staticflickr.com/65535/51599530310_8b0982d76a_m.jpg">
-                </div>
-              </div>
-            <br>
-            <script>
+            <div id="fcontainer"></div>
 
-                /* Full example of API usage including "like button" as a custom control */
-        
-                //import Spotlight from "./src/js/spotlight.js";
-        
+            <script>
+                var media = {images: [], texts: [], links: [], ids: []};
+                var gallery = []
+                var settings = {
+                    "async": false,
+                    "crossDomain": true,
+                    "url": "https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=4ab3f63068c6a51ba490896fe8a5760f&user_id=194195494%40N04&text=&sort=date-posted-desc&extras=url_l%2Cdescription&format=json&nojsoncallback=1",
+                    "method": "GET",
+                    "headers": {},
+                    success: function(data) {
+                        $.each( data.photos.photo, function( i, gp ) {
+                            var url_thumb = 'https://live.staticflickr.com/' + gp.server + '/' + gp.id + '_' + gp.secret + '.jpg'
+                            media.images.push(url_thumb)
+                            media.texts.push(gp.title)
+                            media.ids.push(i+1)
+                            gallery.push({
+                                title: gp.title,
+                                description: gp.description._content,
+                                src: gp.url_l,
+                            })
+                        });
+                    }
+                }
+                $.ajax(settings);
+
+                console.log(media)
+                $('#fcontainer').addFlexImages(media, false).flexGallery({
+                    margin: '0.5vmin',
+                    minHeightRatioWindow: 0.25,
+                    fadeInDuration: 2000,
+                    checkPeriod: 1000,
+                    autoAdjust: true
+                });
+
                 (function(){
-        
-                    const gallery = [{
-                        title: "",
-                        description: "",
-                        src: "https://live.staticflickr.com/65535/51597809452_b5b56baa30_o.jpg",
-                    },{
-                        title: "",
-                        description: "",
-                        src: "https://live.staticflickr.com/65535/51599530360_a1cb756198_o.jpg",
-                    },{
-                        title: "none",
-                        description: "none",
-                        src: "https://live.staticflickr.com/65535/51598853558_3091a97e1b_o.jpg",
-                    },{
-                        title: "none",
-                        description: "none",
-                        src: "https://live.staticflickr.com/65535/51598637096_c4bf0dd174_o.jpg",
-                    },{
-                        title: "none",
-                        description: "none",
-                        src: "https://live.staticflickr.com/65535/51599294004_28dc463568_o.jpg",
-                    },{
-                        title: "none",
-                        description: "none",
-                        src: "https://live.staticflickr.com/65535/51599293424_62ae00d3e4_o.jpg",
-                    },{
-                        title: "none",
-                        description: "none",
-                        src: "https://live.staticflickr.com/65535/51598852128_38cd542a2e_o.jpg",
-                    },{
-                        title: "none",
-                        description: "none",
-                        src: "https://live.staticflickr.com/65535/51599530735_9b13622250_o.jpg",
-                    },{
-                        title: "none",
-                        description: "none",
-                        src: "https://live.staticflickr.com/65535/51599291849_9bd3d9c609_o.jpg",
-                    },{
-                        title: "none",
-                        description: "none",
-                        src: "https://live.staticflickr.com/65535/51599530310_fc359ecd01_o.jpg",
-                    }];
-        
-                    window.showGallery = function(index){
-                        const options = {
-                            index: index,
-                            control: ["page","theme","fullscreen","zoom","play","prev","next", "close"],
-                            animation: ["fade"],
-                        };
-                        Spotlight.show(gallery, options);
+                window.showGallery = function(index){
+                    const options = {
+                        index: index,
+                        control: ["page","theme","fullscreen","zoom","play","prev","next", "close"],
+                        animation: ["fade"],
                     };
+                    Spotlight.show(gallery, options);
+                };
                 }());
-        
             </script>
 
 			<br>
